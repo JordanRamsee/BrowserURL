@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,9 +21,18 @@ namespace BrowserURL
     /// </summary>
     public partial class MainWindow : Window
     {
+        Timer timer = new Timer();
         public MainWindow()
         {
             InitializeComponent();
+            timer.Interval = 3000;
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
+        }
+
+        private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
+        {
+            Console.WriteLine("Hello");
         }
     }
 }
