@@ -14,25 +14,23 @@ namespace BrowserURL
         {
             try
             {
-                AutomationElement element = AutomationElement.FromHandle(chrome.MainWindowHandle);
-                if (element == null)
-                    return "";
-                Condition conditions = new AndCondition(
-                    new PropertyCondition(AutomationElement.ProcessIdProperty, chrome.Id),
-                    new PropertyCondition(AutomationElement.IsControlElementProperty, true),
-                    new PropertyCondition(AutomationElement.IsContentElementProperty, true),
-                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit));
-                AutomationElement elementx = element.FindFirst(TreeScope.Descendants, conditions);
-                if (elementx != null && !elementx.Current.HasKeyboardFocus)
-                    return ((ValuePattern)elementx.GetCurrentPattern(ValuePattern.Pattern)).Current.Value as string;
-                else return "";
 
+                AutomationElement root = AutomationElement.FromHandle(chrome.MainWindowHandle);
+                Condition condTabItem = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.TabItem);
+
+                foreach (AutomationElement tabitem in root.FindAll(TreeScope.Subtree, condTabItem))
+                {
+                    var SearchBar = root.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, "Address and search bar"));
+                    return (string)SearchBar.GetCurrentPropertyValue(ValuePatternIdentifiers.ValueProperty);
+
+                }
+                return "Change tab";
             }
             catch (Exception ex)
             {
                 return "";
             }
-            
+
 
         }
 
